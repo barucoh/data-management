@@ -7,37 +7,37 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DataManagement.Controllers
 {
-    [Produces("application/json")]
-    [Route("api/DataManagement")]
+    [Route("api/[controller]")]
     public class DataManagementController : Controller
     {
-        // GET: api/DataManagement
+        // GET api/values
         [HttpGet]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
         }
 
-        // GET: api/DataManagement/5
-        [HttpGet("{id}", Name = "Get")]
+        // GET api/values/5
+        [HttpGet("{id}")]
         public string Get(int id)
         {
             return "value";
         }
-        
-        // POST: api/DataManagement
+
+        // POST api/values
         [HttpPost]
-        public void Post([FromBody]string value)
+        public void Post(List<IFormFile> files)
         {
+            Console.WriteLine("bla");
         }
-        
-        // PUT: api/DataManagement/5
+
+        // PUT api/values/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody]string value)
         {
         }
-        
-        // DELETE: api/ApiWithActions/5
+
+        // DELETE api/values/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {

@@ -15,46 +15,42 @@ namespace DataManagement.Controllers
     [Route("api/[controller]")]
     public class DataManagementController : Controller
     {
-        // GET api/values
+        // GET api/DataManagement
         [HttpGet]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        // GET api/DataManagement/<image-document-id>/<attachment-name>
+        [HttpGet("{imageDocumentId}/{attachmentName}")]
+        public async Task<string> Get(string imageDocumentId, string attachmentName)
         {
-            return "value";
+            return JsonConvert.SerializeObject((await (GetImageDocument(imageDocumentId))).imageB64);
         }
 
-        // POST api/login/createuser
+        // POST api/DataManagement/UploadImage
         // Creating a new user
         [HttpPost]
         [Route("UploadImage")]
         public async Task<int> UploadImage([FromBody] Image image)
         {
             var httpClient = Helpers.CouchDBConnect.GetClient("users");
-            string jsonifiedImageObject = JsonConvert.SerializeObject(
-                new
-                {
-                    _id = image.userId,
-                    caption = image.caption,
-                    _attachments = new
-                    {
-                        image.caption = new
-                        {
-                            data = image.imageB64
-                        }
-                    }
-                });
-                
-            //var json = Newtonsoft.Json.Linq.JObject.Parse(jsonifiedImageObject);
-            //((Newtonsoft.Json.Linq.JObject)((Newtonsoft.Json.Linq.JObject)json.GetValue("_attachments")).GetValue("image")).Remove("_rev");
-
+            string stringifiedJson =
+                @"{" +
+                "   '_id' : '" + image._id + "'," +
+                "   'caption' : '" + image.caption + "'," +
+                "   '_attachments' : " +
+                "   {" +
+                "      '" + image.name + "' : " +
+                "      {" +
+                "          'data' : '" + image.imageB64 + "'" +
+                "      }" +
+                "   }" +
+                "}";
+            var json = Newtonsoft.Json.Linq.JObject.Parse(stringifiedJson);
             HttpContent httpContent = new StringContent(
-                jsonifiedImageObject,
+                json.ToString(),
                 System.Text.Encoding.UTF8,
                 "application/json"
                 );
@@ -63,16 +59,32 @@ namespace DataManagement.Controllers
             return 0;
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        // PUT api/DataManagement/5
+        [HttpPut]
+        [Route("UpdateImage")]
+        public async void UpdateImage([FromBody]Image image)
         {
+            Image img = await GetImageDocument(image._id);
+            if (img != null)
+            {
+                var httpClient = Helpers.CouchDBConnect.GetClient("users");
+                HttpContent httpContent = new ByteArrayContent(Convert.FromBase64String(image.imageB64));
+                var response = await httpClient.PutAsync("users/" + image._id + "/" + image.name + "?rev=" + img._rev, httpContent);
+                Console.WriteLine(response);
+            }
         }
 
-        // DELETE api/values/5
+        // DELETE api/DataManagement/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+        }
+
+        public async Task<Image> GetImageDocument(string imageId)
+        {
+            var httpClient = Helpers.CouchDBConnect.GetClient("users");
+            var response = await httpClient.GetAsync("users/" + imageId);
+            return response.IsSuccessStatusCode ? (Image)JsonConvert.DeserializeObject(await response.Content.ReadAsStringAsync(), typeof(Image)) : null;
         }
     }
 }

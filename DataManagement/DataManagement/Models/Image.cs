@@ -10,8 +10,8 @@ namespace DataManagement.Models
     {
         public string _id { get; set; }
         public string _rev { get; set; }
-        public string userId { get; set; }
         public string caption { get; set; }
+        public string name { get; set; }
         public string imageB64 { get; set; }
     }
 }

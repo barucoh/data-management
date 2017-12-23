@@ -4,6 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using DataManagement.Helpers;
+using DataManagement.Models;
+using Newtonsoft.Json;
+using System.Net.Http;
+using System.IO;
 
 namespace DataManagement.Controllers
 {
@@ -24,11 +29,38 @@ namespace DataManagement.Controllers
             return "value";
         }
 
-        // POST api/values
+        // POST api/login/createuser
+        // Creating a new user
         [HttpPost]
-        public void Post(List<IFormFile> files)
+        [Route("UploadImage")]
+        public async Task<int> UploadImage([FromBody] Image image)
         {
-            Console.WriteLine("bla");
+            var httpClient = Helpers.CouchDBConnect.GetClient("users");
+            string jsonifiedImageObject = JsonConvert.SerializeObject(
+                new
+                {
+                    _id = image.userId,
+                    caption = image.caption,
+                    _attachments = new
+                    {
+                        image.caption = new
+                        {
+                            data = image.imageB64
+                        }
+                    }
+                });
+                
+            //var json = Newtonsoft.Json.Linq.JObject.Parse(jsonifiedImageObject);
+            //((Newtonsoft.Json.Linq.JObject)((Newtonsoft.Json.Linq.JObject)json.GetValue("_attachments")).GetValue("image")).Remove("_rev");
+
+            HttpContent httpContent = new StringContent(
+                jsonifiedImageObject,
+                System.Text.Encoding.UTF8,
+                "application/json"
+                );
+            var response = await httpClient.PostAsync("users", httpContent);
+            Console.WriteLine(response);
+            return 0;
         }
 
         // PUT api/values/5

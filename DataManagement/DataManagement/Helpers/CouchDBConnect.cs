@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using Newtonsoft.Json;
 
-namespace LoginService.Helpers
+namespace DataManagement.Helpers
 {
     public class CouchDBConnect
     {

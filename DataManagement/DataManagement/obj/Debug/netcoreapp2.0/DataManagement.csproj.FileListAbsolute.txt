@@ -9,3 +9,14 @@ C:\Projects\Cloud Applications\data-management\DataManagement\DataManagement\obj
 C:\Projects\Cloud Applications\data-management\DataManagement\DataManagement\obj\Debug\netcoreapp2.0\DataManagement.AssemblyInfo.cs
 C:\Projects\Cloud Applications\data-management\DataManagement\DataManagement\obj\Debug\netcoreapp2.0\DataManagement.dll
 C:\Projects\Cloud Applications\data-management\DataManagement\DataManagement\obj\Debug\netcoreapp2.0\DataManagement.pdb
+C:\Projects\CloudApplications\data-management\DataManagement\DataManagement\bin\Debug\netcoreapp2.0\DataManagement.deps.json
+C:\Projects\CloudApplications\data-management\DataManagement\DataManagement\bin\Debug\netcoreapp2.0\DataManagement.runtimeconfig.json
+C:\Projects\CloudApplications\data-management\DataManagement\DataManagement\bin\Debug\netcoreapp2.0\DataManagement.runtimeconfig.dev.json
+C:\Projects\CloudApplications\data-management\DataManagement\DataManagement\bin\Debug\netcoreapp2.0\DataManagement.dll
+C:\Projects\CloudApplications\data-management\DataManagement\DataManagement\bin\Debug\netcoreapp2.0\DataManagement.pdb
+C:\Projects\CloudApplications\data-management\DataManagement\DataManagement\obj\Debug\netcoreapp2.0\DataManagement.csprojResolveAssemblyReference.cache
+C:\Projects\CloudApplications\data-management\DataManagement\DataManagement\obj\Debug\netcoreapp2.0\DataManagement.csproj.CoreCompileInputs.cache
+C:\Projects\CloudApplications\data-management\DataManagement\DataManagement\obj\Debug\netcoreapp2.0\DataManagement.AssemblyInfoInputs.cache
+C:\Projects\CloudApplications\data-management\DataManagement\DataManagement\obj\Debug\netcoreapp2.0\DataManagement.AssemblyInfo.cs
+C:\Projects\CloudApplications\data-management\DataManagement\DataManagement\obj\Debug\netcoreapp2.0\DataManagement.dll
+C:\Projects\CloudApplications\data-management\DataManagement\DataManagement\obj\Debug\netcoreapp2.0\DataManagement.pdb

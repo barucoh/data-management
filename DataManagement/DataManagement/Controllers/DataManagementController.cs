@@ -9,12 +9,19 @@ using DataManagement.Models;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.IO;
+using RawRabbit;
 
 namespace DataManagement.Controllers
 {
     [Route("api/[controller]")]
     public class DataManagementController : Controller
     {
+        IBusClient rabbitMQClient;
+
+        public DataManagementController(IBusClient rabbitMQClient)
+        {
+            this.rabbitMQClient = rabbitMQClient;
+        }
         // GET api/DataManagement
         [HttpGet]
         public IEnumerable<string> Get()
@@ -26,7 +33,9 @@ namespace DataManagement.Controllers
         [HttpGet("{imageDocumentId}/{attachmentName}")]
         public async Task<string> Get(string imageDocumentId, string attachmentName)
         {
-            return JsonConvert.SerializeObject((await (GetImageDocument(imageDocumentId))).imageB64);
+            string image = (await (GetImageDocument(imageDocumentId))).imageB64;
+            string jsoned = JsonConvert.SerializeObject(image);
+            return jsoned;
         }
 
         // POST api/DataManagement/UploadImage
@@ -55,6 +64,12 @@ namespace DataManagement.Controllers
                 "application/json"
                 );
             var response = await httpClient.PostAsync("users", httpContent);
+            await this.rabbitMQClient.PublishAsync(new
+            {
+                subject = "test",
+                to = "spam",
+                body = "this is a a test !!!"
+            });
             Console.WriteLine(response);
             return 0;
         }
@@ -84,6 +99,7 @@ namespace DataManagement.Controllers
         {
             var httpClient = Helpers.CouchDBConnect.GetClient("users");
             var response = await httpClient.GetAsync("users/" + imageId);
+            Image img = (Image)JsonConvert.DeserializeObject(await response.Content.ReadAsStringAsync(), typeof(Image));
             return response.IsSuccessStatusCode ? (Image)JsonConvert.DeserializeObject(await response.Content.ReadAsStringAsync(), typeof(Image)) : null;
         }
     }

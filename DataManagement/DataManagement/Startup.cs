@@ -8,6 +8,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using RawRabbit.Configuration;
+using RawRabbit.Enrichers.GlobalExecutionId;
+using RawRabbit.Enrichers.HttpContext;
+using RawRabbit.Enrichers.MessageContext;
+using RawRabbit.Enrichers.MessageContext.Context;
+using RawRabbit.Extensions.Client;
+using RawRabbit.vNext;
+using RawRabbit.vNext.Pipe;
 
 namespace DataManagement
 {
@@ -23,7 +31,15 @@ namespace DataManagement
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services
+            .AddRawRabbit(new RawRabbitOptions
+            {
+                ClientConfiguration =
+                    RawRabbit.Common
+                    .ConnectionStringParser.Parse("pibniaca:WbFVWQe0JkUyudLCMwrlmKVEZd08SlV7@golden-kangaroo.rmq.cloudamqp.com/pibniaca"),
+                Plugins = p => p.UseGlobalExecutionId().UseMessageContext<MessageContext>()
+            })
+            .AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
